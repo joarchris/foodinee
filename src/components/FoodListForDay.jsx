@@ -8,9 +8,8 @@ function FoodListForDay({ foodItems }) {
       <div>
         {sortedFoodItems.map((item) => (
           <p key={item.id}>
-            {item.name} - {item.quantity && <div>{item.quantity} stk</div>} {item.volume && <div>{item.volume} dl</div>}{' '}
-            {item.weight && <div>{item.weight} g</div>}
-            {item.timestamp}
+            {item.name} - {item.quantity && <span>{item.quantity}stk</span>} {item.volume && <span>{item.volume}dl</span>}{' '}
+            {item.weight && <span>{item.weight}g</span>} kl:{item.timestamp}
           </p>
         ))}
       </div>
