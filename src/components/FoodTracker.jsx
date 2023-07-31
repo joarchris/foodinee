@@ -43,7 +43,7 @@ function FoodTracker() {
         quantity: parseInt(quantity),
         weight: parseInt(weight),
         volume: parseInt(volume),
-        timestamp: new Date().toLocaleTimeString(),
+        timestamp: new Date().toLocaleString(),
       };
 
       setFoodItems((prevFoodItems) => [...prevFoodItems, newFoodItem]);
@@ -56,6 +56,14 @@ function FoodTracker() {
       localStorage.setItem('foodItems', JSON.stringify([...foodItems, newFoodItem]));
     }
   };
+  const handleDelete = (itemId) => {
+    // Remove the item from the foodItems state
+    setFoodItems((prevFoodItems) => prevFoodItems.filter((item) => item.id !== itemId));
+
+    // Remove the item from local storage
+    const updatedFoodItems = foodItems.filter((item) => item.id !== itemId);
+    localStorage.setItem('foodItems', JSON.stringify(updatedFoodItems));
+  };
 
   return (
     <div>
@@ -66,7 +74,7 @@ function FoodTracker() {
         <input type="number" value={volume} onChange={handleChangeVolume} placeholder="Volume in dl" />
         <button type="submit">Add</button>
       </form>
-      <FoodListForDay foodItems={foodItems} />
+      <FoodListForDay foodItems={foodItems} onDelete={handleDelete} />
     </div>
   );
 }
