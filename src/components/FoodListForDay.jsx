@@ -16,22 +16,29 @@ function groupFoodItemsByDate(foodItems) {
 function FoodListForDay({ foodItems, onDelete }) {
   const groupedItems = groupFoodItemsByDate(foodItems);
 
+  // Sort the keys (dates) in reverse order to display the newest item at the top
+  const sortedDates = Object.keys(groupedItems).sort((a, b) => new Date(b) - new Date(a));
+
   return (
     <div>
-      {Object.keys(groupedItems).map((date) => (
-        <div className="listing-details" key={date}>
-          <h3>{date}</h3>
-          {groupedItems[date].map((item) => (
-            <p key={item.id}>
-              {item.name} - {item.quantity && <span>{item.quantity}stk</span>} {item.volume && <span>{item.volume}dl</span>}{' '}
-              {item.weight && <span>{item.weight}g</span>}{' '}
-              <span className="cursor-pointer ml-2" onClick={() => onDelete(item.id)}>
-                <TrashIcon height={15} color={'red'} />
-              </span>
-            </p>
-          ))}
-        </div>
-      ))}
+      {sortedDates
+        .reverse() // Reverse the sortedDates array to have newest date groups on top
+        .map((date) => (
+          <div className="listing-details" key={date}>
+            <h3>{date}</h3>
+            {groupedItems[date]
+              .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+              .map((item) => (
+                <p key={item.id}>
+                  {item.name} - {item.quantity && <span>{item.quantity}stk</span>}{' '}
+                  {item.volume && <span>{item.volume}dl</span>} {item.weight && <span>{item.weight}g</span>}{' '}
+                  <span className="cursor-pointer ml-2" onClick={() => onDelete(item.id)}>
+                    <TrashIcon height={15} color={'red'} />
+                  </span>
+                </p>
+              ))}
+          </div>
+        ))}
     </div>
   );
 }
