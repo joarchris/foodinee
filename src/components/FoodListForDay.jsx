@@ -5,6 +5,7 @@ import { TrashIcon } from '@heroicons/react/outline';
 function groupFoodItemsByDate(foodItems) {
   return foodItems.reduce((groupedItems, item) => {
     const date = item.timestamp.split(' ')[0]; // Extracting the date from the timestamp
+    console.log('date:', date);
     if (!groupedItems[date]) {
       groupedItems[date] = [];
     }
@@ -12,22 +13,23 @@ function groupFoodItemsByDate(foodItems) {
     return groupedItems;
   }, {});
 }
-
 function FoodListForDay({ foodItems, onDelete }) {
   const groupedItems = groupFoodItemsByDate(foodItems);
+  console.log('grouped items:', groupedItems);
 
   // Sort the keys (dates) in reverse order to display the newest item at the top
   const sortedDates = Object.keys(groupedItems).sort((a, b) => new Date(b) - new Date(a));
-
+  console.log('sorted dates:', sortedDates);
   return (
     <div>
       {sortedDates
-        .reverse() // Reverse the sortedDates array to have newest date groups on top
+        // Reverse the sortedDates array to have newest date groups on top
         .map((date) => (
           <div className="listing-details" key={date}>
             <h3>{date}</h3>
             {groupedItems[date]
               .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+              .reverse()
               .map((item) => (
                 <p key={item.id}>
                   {item.name} - {item.quantity && <span>{item.quantity}stk</span>}{' '}
