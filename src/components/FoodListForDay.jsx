@@ -18,21 +18,17 @@ function FoodListForDay({ foodItems, onDelete }) {
   console.log('grouped items:', groupedItems);
 
   // Sort the keys (dates) in reverse order to display the newest item at the top
-  const sortedDates = Object.keys(groupedItems)
-    .sort((a, b) => new Date(b) - new Date(a))
-    .reverse();
+  const sortedDates = Object.keys(groupedItems).sort((a, b) => new Date(b) - new Date(a));
   console.log('sorted dates:', sortedDates);
   return (
     <div>
       {sortedDates
-        .reverse()
         // Reverse the sortedDates array to have newest date groups on top
         .map((date) => (
           <div className="listing-details" key={date}>
             <h3>{date}</h3>
             {groupedItems[date]
               .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-              .reverse()
               .map((item) => (
                 <p key={item.id}>
                   {item.name} - {item.quantity && <span>{item.quantity}stk</span>}{' '}

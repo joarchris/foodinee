@@ -1,6 +1,7 @@
 // FoodTracker.js
 import React, { useState, useEffect } from 'react';
 import FoodListForDay from './FoodListForDay';
+import SortedFoodList from './SortedFoodList';
 
 function FoodTracker() {
   const [foodName, setFoodName] = useState('');
@@ -44,6 +45,9 @@ function FoodTracker() {
         weight: parseInt(weight),
         volume: parseInt(volume),
         timestamp: new Date().toLocaleString(),
+        year: new Date().getFullYear(),
+        month: new Date().getMonth(),
+        date: new Date().getDate(),
       };
 
       setFoodItems((prevFoodItems) => [...prevFoodItems, newFoodItem]);
@@ -74,7 +78,7 @@ function FoodTracker() {
         <input type="number" value={volume} onChange={handleChangeVolume} placeholder="Volume in dl" />
         <button type="submit">Add</button>
       </form>
-      <FoodListForDay foodItems={foodItems} onDelete={handleDelete} />
+      <SortedFoodList foodItems={foodItems} onDelete={handleDelete} />
     </div>
   );
 }
