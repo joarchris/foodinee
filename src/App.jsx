@@ -1,18 +1,9 @@
-// App.js
-import React from 'react';
-import FoodTracker from './components/FoodTracker';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import SortedFoodlist from './components/SortedFoodList';
 
-function App() {
+export default function App() {
   return (
     <div className="app">
-      <div className="pages">
-        <FoodTracker />
-      </div>
-      <Footer />
+      <SortedFoodlist />
     </div>
   );
 }
-
-export default App;

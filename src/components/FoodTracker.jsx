@@ -1,86 +1,45 @@
-// FoodTracker.js
-import React, { useState, useEffect } from 'react';
-import FoodListForDay from './FoodListForDay';
-import SortedFoodList from './SortedFoodList';
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
-function FoodTracker() {
-  const [foodName, setFoodName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [weight, setWeight] = useState('');
+export default function FoodTracker({ onAdd, foodItems }) {
+  const [title, setTitle] = useState('');
+  const [quantity, setQuantity] = useState(''); // Initialize with 0 as a number
+  const [weight, setWeight] = useState(''); // Initialize with 0 as a number
   const [volume, setVolume] = useState('');
-  const [foodItems, setFoodItems] = useState([]);
 
-  useEffect(() => {
-    // Load data from local storage when the component mounts
-    const savedData = localStorage.getItem('foodItems');
-    if (savedData) {
-      setFoodItems(JSON.parse(savedData));
-    }
-  }, []);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const foodItem = {
+      title,
+      quantity,
+      volume,
+      weight,
+      createdAt: Date.now(),
+      id: uuidv4(), // Assign a unique id here
+    };
 
-  const handleChangeFood = (e) => {
-    setFoodName(e.target.value);
+    saveItem(foodItem);
+    setTitle('');
+    setQuantity('');
+    setVolume('');
+    setWeight('');
   };
 
-  const handleChangeQuantity = (e) => {
-    setQuantity(e.target.value);
-  };
-
-  const handleChangeWeight = (e) => {
-    setWeight(e.target.value);
-  };
-
-  const handleChangeVolume = (e) => {
-    setVolume(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (foodName && quantity) {
-      const newFoodItem = {
-        id: Date.now(),
-        name: foodName,
-        quantity: parseInt(quantity),
-        weight: parseInt(weight),
-        volume: parseInt(volume),
-        timestamp: new Date().toLocaleString(),
-        year: new Date().getFullYear(),
-        month: new Date().getMonth(),
-        date: new Date().getDate(),
-      };
-
-      setFoodItems((prevFoodItems) => [...prevFoodItems, newFoodItem]);
-      setFoodName('');
-      setQuantity('');
-      setWeight('');
-      setVolume('');
-
-      // Save data to localStorage
-      localStorage.setItem('foodItems', JSON.stringify([...foodItems, newFoodItem]));
-    }
-  };
-  const handleDelete = (itemId) => {
-    // Remove the item from the foodItems state
-    setFoodItems((prevFoodItems) => prevFoodItems.filter((item) => item.id !== itemId));
-
-    // Remove the item from local storage
-    const updatedFoodItems = foodItems.filter((item) => item.id !== itemId);
-    localStorage.setItem('foodItems', JSON.stringify(updatedFoodItems));
+  const saveItem = (foodItem) => {
+    const foodpackage = [...foodItems, foodItem];
+    onAdd(foodItem); // Call the parent's onAdd function to update state
+    localStorage.setItem('foodpackage', JSON.stringify(foodpackage));
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <input type="text" value={foodName} onChange={handleChangeFood} placeholder="Food or Drink Name" />
-        <input type="number" value={quantity} onChange={handleChangeQuantity} placeholder="Quantity" />
-        <input type="number" value={weight} onChange={handleChangeWeight} placeholder="Weight in gram" />
-        <input type="number" value={volume} onChange={handleChangeVolume} placeholder="Volume in dl" />
-        <button type="submit">Add</button>
+        <input type="text" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Mat eller drikke" />
+        <input type="number" value={quantity} onChange={(event) => setQuantity(event.target.value)} placeholder="Antall x" />
+        <input type="number" value={volume} onChange={(event) => setVolume(event.target.value)} placeholder="Volume dl" />
+        <input type="number" value={weight} onChange={(event) => setWeight(event.target.value)} placeholder="Vekt gram" />
+        <button type="submit">Add Item</button>
       </form>
-      <SortedFoodList foodItems={foodItems} onDelete={handleDelete} />
     </div>
   );
 }
-
-export default FoodTracker;
